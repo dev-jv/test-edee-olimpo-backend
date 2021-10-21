@@ -1,12 +1,13 @@
 const { response, request } = require('express');
+const Record = require('../models/record');
 
 const getRatings = (req = request, res= response) => {
-    // const rtg = req.query.rating;
-    const { rtg = 'undefined' } = req.query;
+
+    const { rating = 'undefined' } = req.query;
 
     res.status(201).json({
         msg: 'Records obtained',
-        ranting: rtg,
+        rating: rating,
     })
 };
 
@@ -20,21 +21,15 @@ const putRatings = (req = request, res= response) => {
     })
 };
 
-const postRatings = (req = request, res= response) => {
+const postRatings = async (req = request, res= response) => {
 
     const { name, email, movie, rating } = req.body;
+    const record = new Record({name, email, movie, rating});
+    await record.save();
 
     res.status(201).json({
         msg: 'The score has been recorded',
-        // body,
-        User: {
-            Name: name,
-            Email: email
-        },
-        Record : {
-            Movie: movie,
-            Rating: rating
-        }
+        Record: record
     })
 };
 

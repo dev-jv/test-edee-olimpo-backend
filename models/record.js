@@ -15,7 +15,8 @@ const recordSchema = Schema({
     },
     rating: {
         type: String,
-        required: [true, 'A rating is required']
+        required: [true, 'A rating is required'],
+        enum: ['1', '2', '3', '4', '5']
     }
 })
 

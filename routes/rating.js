@@ -1,26 +1,32 @@
-const { getRatings, putRatings, postRatings } = require('../controllers/ratingController');
+const { getRecords, updateRecord, createRecord } = require('../controllers/ratingController');
 
 const { Router } = require('express');
 const { check } = require("express-validator");
 
 const { validateFields } = require("../middlewares/validateFields");
-const { validMovie } = require("../helpers/validateDB");
+const { validMovie, validIdByRecord } = require("../helpers/validateDB");
 
 const router = Router();
 
-router.get('/', getRatings);
+router.get('/', getRecords);
 
-router.put('/:id', putRatings);
+router.put('/:id', [
+    check( 'id', 'Invalid ID' ).isMongoId(),
+    check( 'id' ).custom( validIdByRecord),
+    check( 'rating', 'Rating field is empty' ).not().isEmpty(),
+    check( 'rating', 'Invalid rating' ).isIn(['1', '2', '3', '4', '5']),
+    validateFields
+], updateRecord);
 
 router.post('/new', [
     check( 'name', 'Name field is empty' ).not().isEmpty(),
     check( 'name', 'Name field is too short' ).isLength({ min: 2 }),
     check( 'email', 'Email field is empty' ).not().isEmpty(),
     check( 'email', 'Invalid email' ).isEmail(),
-    // check( 'movie', 'Has not selected a movie' ).not().isEmpty(),
     check( 'movie' ).custom( validMovie ),
     check( 'rating', 'Rating field is empty' ).not().isEmpty(),
+    check( 'rating', 'Invalid rating' ).isIn(['1', '2', '3', '4', '5']),
     validateFields
-], postRatings);
+], createRecord);
 
 module.exports = router;

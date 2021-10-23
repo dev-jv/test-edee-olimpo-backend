@@ -1,4 +1,4 @@
-const { getRecords, updateRecord, createRecord } = require('../controllers/ratingController');
+const { getRecords, updateRecord, createRecord, getMovies } = require('../controllers/ratingController');
 
 const { Router } = require('express');
 const { check } = require("express-validator");
@@ -9,6 +9,8 @@ const { validMovie, validIdByRecord } = require("../helpers/validateDB");
 const router = Router();
 
 router.get('/', getRecords);
+
+router.get('/movies', getMovies);
 
 router.put('/:id', [
     check( 'id', 'Invalid ID' ).isMongoId(),

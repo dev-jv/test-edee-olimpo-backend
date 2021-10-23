@@ -1,5 +1,6 @@
 const { response, request } = require('express');
 const Record = require('../models/record');
+const Movie = require('../models/movie');
 
 const getRecords = async (req = request, res= response) => {
 
@@ -44,8 +45,21 @@ const createRecord = async (req = request, res= response) => {
     })
 };
 
+const getMovies = async (req = request, res= response) => {
+
+    const movies = await Movie.find();
+    const elements = await Movie.countDocuments();
+
+    res.status(201).json({
+        msg: 'Records obtained',
+        elements,
+        movies
+    })
+};
+
 module.exports = {
     getRecords,
     updateRecord,
-    createRecord
+    createRecord,
+    getMovies
 };
